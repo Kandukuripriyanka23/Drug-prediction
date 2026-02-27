@@ -1,0 +1,37 @@
+{
+  "dataset_file": "drugsCom_raw.xlsx",
+  "total_rows": 161297,
+  "total_columns": 7,
+  "columns": [
+    "Unnamed: 0",
+    "drugName",
+    "condition",
+    "review",
+    "rating",
+    "date",
+    "usefulCount"
+  ],
+  "missing_values": {
+    "Unnamed: 0": 0,
+    "drugName": 0,
+    "condition": 899,
+    "review": 0,
+    "rating": 0,
+    "date": 0,
+    "usefulCount": 0
+  },
+  "duplicate_rows": 0,
+  "unique_conditions": 884,
+  "target_conditions": {
+    "Depression": 9069,
+    "High Blood Pressure": 2321,
+    "Diabetes, Type 2": 2554
+  },
+  "filtered_total": 13944,
+  "class_distribution": {
+    "Depression": 9069,
+    "Diabetes, Type 2": 2554,
+    "High Blood Pressure": 2321
+  },
+  "validation_status": "PASSED"
+}
