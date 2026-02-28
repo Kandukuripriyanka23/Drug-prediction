@@ -16,6 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import VotingClassifier
+from sklearn.multiclass import OneVsRestClassifier
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
@@ -119,16 +120,15 @@ print(f"     ✅ LinearSVC: {svc_score:.4f} accuracy in {svc_time:.1f}s")
 
 print("\n  Training Logistic Regression...")
 start = time.time()
-lr = LogisticRegression(
+# Use OneVsRestClassifier with liblinear for stable multiclass support
+base_lr = LogisticRegression(
     C=1.0,
     max_iter=1000,
-    class_weight='balanced',
-    solver='saga',
-    multi_class='multinomial',
+    solver='liblinear',
     random_state=RANDOM_STATE,
-    n_jobs=-1,
     verbose=0
 )
+lr = OneVsRestClassifier(base_lr, n_jobs=-1)
 lr.fit(X_train, y_train)
 lr_time = time.time() - start
 lr_score = lr.score(X_test, y_test)
