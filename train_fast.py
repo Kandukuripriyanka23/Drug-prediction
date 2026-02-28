@@ -128,7 +128,7 @@ base_lr = LogisticRegression(
     random_state=RANDOM_STATE,
     verbose=0
 )
-lr = OneVsRestClassifier(base_lr, n_jobs=-1)
+lr = OneVsRestClassifier(base_lr, n_jobs=1)
 lr.fit(X_train, y_train)
 lr_time = time.time() - start
 lr_score = lr.score(X_test, y_test)
