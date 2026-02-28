@@ -21,32 +21,142 @@ st.set_page_config(
 )
 
 # ============================================================
-# CUSTOM STYLING
+# CUSTOM STYLING - Dark Mode Compatible
 # ============================================================
 st.markdown("""
 <style>
+    /* Main fonts and colors */
     .big-font {
         font-size: 28px;
         font-weight: bold;
         color: #1f77b4;
     }
-    .metric-box {
-        background-color: #f0f2f6;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #1f77b4;
+    
+    /* Result boxes - High contrast for dark mode */
+    .prediction-result {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 30px;
+        border-radius: 12px;
+        border: 3px solid #60a5fa;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
-    .success-box {
-        background-color: #d4edda;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #28a745;
+    
+    .condition-label {
+        color: #e0e7ff;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
     }
-    .info-box {
-        background-color: #d1ecf1;
+    
+    .condition-name {
+        color: #fbbf24;
+        font-size: 36px;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+    
+    .confidence-box {
+        background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        padding: 25px;
+        border-radius: 12px;
+        border: 3px solid #34d399;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+    
+    .confidence-label {
+        color: #d1fae5;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .confidence-value {
+        color: #fbbf24;
+        font-size: 48px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    /* Probability distribution */
+    .prob-header {
+        color: #60a5fa;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 30px 0 20px 0;
+        border-bottom: 3px solid #60a5fa;
+        padding-bottom: 10px;
+    }
+    
+    .prob-item {
+        background-color: rgba(59, 130, 246, 0.1);
         padding: 15px;
         border-radius: 8px;
-        border-left: 4px solid #0c5460;
+        margin: 10px 0;
+        border-left: 4px solid #60a5fa;
+    }
+    
+    .prob-condition {
+        color: #e0e7ff;
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .prob-percentage {
+        color: #fbbf24;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    /* Analysis section */
+    .analysis-box {
+        background-color: rgba(59, 130, 246, 0.05);
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px solid #3b82f6;
+        margin: 20px 0;
+    }
+    
+    .analysis-title {
+        color: #60a5fa;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .metric-row {
+        display: flex;
+        justify-content: space-around;
+        margin: 15px 0;
+    }
+    
+    .metric-item {
+        background-color: rgba(107, 114, 128, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        flex: 1;
+        margin: 0 5px;
+        text-align: center;
+    }
+    
+    .metric-label {
+        color: #9ca3af;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .metric-value {
+        color: #60a5fa;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -186,24 +296,37 @@ if page == "🏠 Home":
     """)
 
 # ============================================================
-# PAGE 2: PREDICT CONDITION
+# PAGE 2: PREDICT CONDITION - NEW DARK MODE FRIENDLY DESIGN
 # ============================================================
 elif page == "🔮 Predict Condition":
     st.markdown('<p class="big-font">🔮 Predict Patient Condition</p>', unsafe_allow_html=True)
     
-    st.markdown("Enter a drug review to classify the patient's condition:")
+    st.markdown("""
+    <div style="background-color: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #60a5fa;">
+        <strong style="color: #60a5fa;">💡 Enter a drug review below to classify the patient's medical condition</strong>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Text input
+    st.markdown("")
+    
+    # Text input with better styling - LARGER HEIGHT
     review_text = st.text_area(
-        "📝 Enter or paste drug review:",
-        height=200,
-        placeholder="Example: 'This medication has helped me manage my blood pressure very well. I take it twice daily and haven't experienced any significant side effects...'"
+        "📝 Drug Review:",
+        height=350,
+        placeholder="Example: 'This medication has helped me manage my blood pressure very well. I take it twice daily and haven't experienced any significant side effects...'",
+        help="Paste or type the patient's drug review here"
     )
     
+    st.markdown("")
+    
     # Prediction button
-    if st.button("🚀 Classify", use_container_width=True, type="primary"):
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    with col2:
+        predict_button = st.button("🚀 CLASSIFY NOW", use_container_width=True, type="primary")
+    
+    if predict_button:
         if review_text.strip():
-            with st.spinner("🔄 Analyzing review..."):
+            with st.spinner("⏳ Analyzing review... This may take a few seconds"):
                 # Preprocess
                 cleaned_text = preprocess_review(review_text)
                 
@@ -212,71 +335,136 @@ elif page == "🔮 Predict Condition":
                 
                 # Predict
                 prediction = model.predict(X)[0]
-                distances = model.decision_function(X)[0]  # Get decision scores
+                distances = model.decision_function(X)[0]
                 
                 # Get confidence (normalize scores)
-                confidence_scores = 1 / (1 + np.exp(-distances))  # sigmoid
-                confidence_scores = confidence_scores / confidence_scores.sum()  # normalize
+                confidence_scores = 1 / (1 + np.exp(-distances))
+                confidence_scores = confidence_scores / confidence_scores.sum()
                 
                 predicted_condition = condition_names[prediction]
                 confidence = confidence_scores[prediction]
             
-            # Display results
+            # ========== RESULT DISPLAY ==========
+            st.markdown("")
+            st.markdown("---")
+            st.markdown("")
+            
+            # Success message
             st.markdown("""
-            <div class="success-box">
-                <strong>✅ Prediction Complete</strong>
+            <div style="background-color: #10b981; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                <span style="color: #d1fae5; font-size: 18px; font-weight: bold;">✅ PREDICTION COMPLETE</span>
             </div>
             """, unsafe_allow_html=True)
             
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown(f"""
-                <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
-                    <strong>🎯 Predicted Condition</strong><br/>
-                    <span style="font-size: 24px; color: #28a745; font-weight: bold;">{predicted_condition}</span>
-                </div>
-                """, unsafe_allow_html=True)
+            # Main prediction result
+            st.markdown(f"""
+            <div class="prediction-result">
+                <div class="condition-label">🎯 Predicted Condition</div>
+                <div class="condition-name">{predicted_condition}</div>
+                <div style="color: #93c5fd; font-size: 14px;">Classification Result</div>
+            </div>
+            """, unsafe_allow_html=True)
             
-            with col2:
-                st.markdown(f"""
-                <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #1976d2;">
-                    <strong>📊 Confidence</strong><br/>
-                    <span style="font-size: 24px; color: #1976d2; font-weight: bold;">{confidence:.1%}</span>
-                </div>
-                """, unsafe_allow_html=True)
+            st.markdown("")
+            
+            # Confidence score
+            st.markdown(f"""
+            <div class="confidence-box">
+                <div class="confidence-label">📊 Confidence Score</div>
+                <div class="confidence-value">{confidence:.1%}</div>
+                <div style="color: #d1fae5; font-size: 14px;">Model Certainty Level</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("")
             
             # Probability distribution
-            st.subheader("📈 Probability Distribution")
+            st.markdown("""
+            <div class="prob-header">📈 PROBABILITY DISTRIBUTION</div>
+            """, unsafe_allow_html=True)
+            
             prob_data = {
                 'Condition': condition_names,
                 'Probability': confidence_scores
             }
             prob_df = pd.DataFrame(prob_data).sort_values('Probability', ascending=False)
             
-            # Bar chart
+            # Display each probability
+            for idx, row in prob_df.iterrows():
+                prob_pct = row['Probability'] * 100
+                condition = row['Condition']
+                
+                # Color coding based on probability
+                if prob_pct >= 60:
+                    color = "#10b981"  # Green
+                    bg_color = "rgba(16, 185, 129, 0.1)"
+                elif prob_pct >= 30:
+                    color = "#f59e0b"  # Amber
+                    bg_color = "rgba(245, 158, 11, 0.1)"
+                else:
+                    color = "#6366f1"  # Indigo
+                    bg_color = "rgba(99, 102, 241, 0.1)"
+                
+                st.markdown(f"""
+                <div style="background-color: {bg_color}; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid {color};">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #e0e7ff; font-weight: 600; font-size: 16px;">{condition}</span>
+                        <span style="color: {color}; font-weight: bold; font-size: 18px;">{prob_pct:.1f}%</span>
+                    </div>
+                    <div style="background-color: rgba(107, 114, 128, 0.3); height: 8px; border-radius: 4px; margin-top: 8px; overflow: hidden;">
+                        <div style="background: linear-gradient(90deg, {color}, {color}aa); height: 100%; width: {prob_pct}%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("")
+            
+            # Visual chart
+            st.markdown("**Probability Chart:**")
             st.bar_chart(prob_df.set_index('Condition')['Probability'], height=300)
             
-            # Detailed breakdown
-            st.subheader("📋 Detailed Breakdown")
-            for idx, row in prob_df.iterrows():
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    st.metric(row['Condition'], f"{row['Probability']:.1%}")
-                with col2:
-                    st.progress(row['Probability'])
+            st.markdown("")
             
-            # Input text info
-            st.subheader("📝 Review Analysis")
+            # Input analysis
+            st.markdown("""
+            <div class="analysis-box">
+                <div class="analysis-title">📝 Review Analysis</div>
+            """, unsafe_allow_html=True)
+            
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Original Length", f"{len(review_text)} chars")
+                st.metric(
+                    label="Original Length",
+                    value=f"{len(review_text)} chars",
+                    delta=None
+                )
             with col2:
-                st.metric("Cleaned Length", f"{len(cleaned_text)} chars")
+                st.metric(
+                    label="Cleaned Length",
+                    value=f"{len(cleaned_text)} chars",
+                    delta=None
+                )
             with col3:
-                st.metric("Word Count", len(cleaned_text.split()))
-        
+                st.metric(
+                    label="Word Count",
+                    value=len(cleaned_text.split()),
+                    delta=None
+                )
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            st.markdown("")
+            
+            # Prediction details
+            st.info(f"""
+            **Prediction Details:**
+            - Selected condition: **{predicted_condition}**
+            - Confidence level: **{confidence:.1%}**
+            - Analysis completed successfully
+            """)
+            
         else:
-            st.warning("⚠️ Please enter a review text!")
+            st.warning("⚠️ Please enter a drug review to classify!", icon="⚠️")
 
 # ============================================================
 # PAGE 3: MODEL PERFORMANCE
